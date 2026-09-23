@@ -1,8 +1,8 @@
 'use client';
 
-import { useRef, useMemo } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
-import { Float, Environment, ContactShadows } from '@react-three/drei';
+import { useRef, useMemo, useEffect, useState } from 'react';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
+import { Float } from '@react-three/drei';
 import * as THREE from 'three';
 
 function Gear({
@@ -166,7 +166,7 @@ function EnergyLine({
 
 function ParticleField() {
   const pointsRef = useRef<THREE.Points>(null);
-  const count = 200;
+  const count = 60;
 
   const positions = useMemo(() => {
     const arr = new Float32Array(count * 3);
@@ -230,15 +230,50 @@ function CoreSphere() {
 }
 
 export default function HeroScene() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsVisible(entry.isIntersecting),
+      { rootMargin: '160px' }
+    );
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <Canvas
-      camera={{ position: [0, 0, 7], fov: 50 }}
-      gl={{ antialias: true, alpha: true }}
-      dpr={[1, 2]}
-      style={{ background: 'transparent' }}
-    >
+    <div ref={containerRef} className="h-full w-full">
+      <Canvas
+        camera={{ position: [0, 0, 7], fov: 50 }}
+        frameloop="demand"
+        dpr={[1, 1.5]}
+        gl={{ powerPreference: 'high-performance', antialias: false, alpha: true }}
+        style={{ background: 'transparent' }}
+      >
+        <SceneAnimation active={isVisible} />
+      </Canvas>
+    </div>
+  );
+}
+
+function SceneAnimation({ active }: { active: boolean }) {
+  const invalidate = useThree((state) => state.invalidate);
+
+  useEffect(() => {
+    if (!active) return;
+    const interval = window.setInterval(() => invalidate(), 1000 / 30);
+    invalidate();
+    return () => window.clearInterval(interval);
+  }, [active, invalidate]);
+
+  return (
+    <>
       <ambientLight intensity={0.6} />
-      <directionalLight position={[5, 5, 5]} intensity={0.8} castShadow />
+      <directionalLight position={[5, 5, 5]} intensity={0.8} />
       <pointLight position={[-3, 2, 3]} intensity={1.5} color="#A83A2A" distance={15} />
       <pointLight position={[3, -2, -2]} intensity={1} color="#5B7A92" distance={12} />
 
@@ -277,15 +312,6 @@ export default function HeroScene() {
         <ParticleField />
       </group>
 
-      <ContactShadows
-        position={[0, -2.5, 0]}
-        opacity={0.3}
-        scale={10}
-        blur={2.5}
-        far={4}
-        color="#000000"
-      />
-      <Environment preset="dawn" />
-    </Canvas>
+      </>
   );
 }
