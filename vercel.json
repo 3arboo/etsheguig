@@ -1,6 +1,6 @@
 {
   "cleanUrls": true,
-  "framework": null,
+  "framework": "nextjs",
   "headers": [
     {
       "source": "/(.*).(png|jpg|svg)",
