@@ -64,7 +64,7 @@ export default function TrustBar({ lang }: { lang: Lang }) {
   const isRTL = lang === 'ar';
 
   return (
-    <section id="trust" className="relative w-full bg-charcoal py-24 lg:py-32">
+    <section id="trust" className="relative w-full overflow-hidden bg-charcoal py-24 lg:py-32">
       <div className="absolute inset-0 grid-bg opacity-40" />
       <div className="absolute left-1/2 top-1/2 h-[500px] w-[800px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand-red/5 blur-[120px]" />
 

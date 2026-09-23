@@ -168,7 +168,7 @@ export default function BookingWidget({ lang }: { lang: Lang }) {
   const isValid = form.equipment && form.name && form.phone;
 
   return (
-    <section id="booking" className="relative w-full bg-charcoal-light py-24 lg:py-32">
+    <section id="booking" className="relative w-full overflow-hidden bg-charcoal-light py-24 lg:py-32">
       <div className="absolute inset-0 grid-bg opacity-30" />
       <div className="absolute left-0 top-1/2 h-96 w-96 -translate-y-1/2 rounded-full bg-brand-red/5 blur-[100px]" />
       <div className="absolute right-0 bottom-0 h-96 w-96 rounded-full bg-steel/15 blur-[100px]" />
@@ -182,8 +182,8 @@ export default function BookingWidget({ lang }: { lang: Lang }) {
           className="overflow-hidden rounded-3xl border border-steel/40 bg-white/90 backdrop-blur-xl shadow-xl"
         >
           {/* Header bar */}
-          <div className="flex items-center justify-between border-b border-steel/30 bg-gradient-to-r from-brand-red/8 to-transparent px-6 py-5 sm:px-8">
-            <div>
+          <div className="flex flex-col gap-3 border-b border-steel/30 bg-gradient-to-r from-brand-red/8 to-transparent px-6 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-8">
+            <div className="min-w-0">
               <h2 className={`text-xl font-bold text-steel-dark sm:text-2xl ${isRTL ? 'font-arabic' : 'font-inter'}`}>
                 {t.title}
               </h2>
